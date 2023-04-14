@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+
 namespace Samogina_LAB3
 {   class LAB3 { 
         static void Main(string[] args) {
@@ -7,9 +9,13 @@ namespace Samogina_LAB3
             list.Push_front("3");
             list.Push_front("2");
             list.Push_front("1");
-            list.Pop_front();
-            list.getAt(0).PRINT();
-            Console.WriteLine("Da");
+            list.insert_key("2","17");
+            list.clear();
+
+
+            Console.WriteLine(1);
+            Console.WriteLine(1);
+            Console.WriteLine(1);
         }
     }
 
@@ -31,7 +37,7 @@ namespace Samogina_LAB3
     {
         protected NODE? Head;
         protected NODE? Tail;
-        public NODE Push_front(object data)
+        public NODE Push_front(object data) // добавление в начало
         {
             NODE ptr = new NODE(data);
             ptr.Next = Head;
@@ -40,7 +46,7 @@ namespace Samogina_LAB3
             Head = ptr;
             return ptr;
         }
-        public NODE Push_back(object data)
+        public NODE Push_back(object data) //добавление в конец
         {
             NODE ptr = new NODE(data);
             ptr.Prev = Tail;
@@ -49,7 +55,7 @@ namespace Samogina_LAB3
             Tail = ptr;
             return ptr;
         }
-        public void Pop_front() {
+        public void Pop_front() { //удаление с головы
             if (Head == null) return;
             NODE? ptr = Head.Next;
             if (ptr != null) { ptr.Prev = null; }
@@ -57,7 +63,7 @@ namespace Samogina_LAB3
 
             Head = ptr;
         }
-        public void Pop_back()
+        public void Pop_back() //удаление с конца
         {
             if (Tail == null) return;
             NODE? ptr = Tail.Prev;
@@ -66,7 +72,7 @@ namespace Samogina_LAB3
 
             Tail = ptr;
         }
-        public NODE getAt(int index)
+        public NODE getAt(int index) //поиск по позиции
         {
             NODE? ptr = Head;
             int n = 0;
@@ -78,7 +84,7 @@ namespace Samogina_LAB3
             }
             return ptr;
         }
-        public NODE insert(int index,object data) {
+        public NODE insert(int index,object data) { //добавить на позицию
             NODE right = getAt(index);
             if (right == null) return Push_back(data);
 
@@ -92,7 +98,7 @@ namespace Samogina_LAB3
             right.Prev= ptr;
             return ptr;
         }
-        public void earse(int index)
+        public void earse(int index) // удаление по позиции
         {
             NODE ptr=getAt(index);
             if (ptr == null) return;
@@ -103,6 +109,43 @@ namespace Samogina_LAB3
             left.Next = righ;
             righ.Prev = left;
         }
+        public NODE find(object data) { // найти по ключу
+            NODE? ptr = Head;
+            while(ptr.Data != data )
+            {
+                if(ptr==null) { return ptr;}
+                ptr = ptr.Next;
+            }
+            return ptr;
+        }
+        public NODE insert_key(object key, object data) //добавление после ключа
+        {
+            NODE right = find(key);
+            right = right.Next;
+            if (right == null) return Push_back(data);
 
+            NODE left = right.Prev;
+            if (left == null) return Push_front(data);
+
+            NODE ptr = new NODE(data);
+            ptr.Prev = left;
+            ptr.Next = right;
+            left.Next = ptr;
+            right.Prev = ptr;
+            return ptr;
+        }
+        public void earse_key(object data) // удаление по ключу
+        {
+            NODE ptr = find(data);
+            if (ptr == null) return;
+            if (ptr.Prev == null) { Pop_front(); return; }
+            if (ptr.Next == null) { Pop_back(); return; }
+            NODE left = ptr.Prev;
+            NODE righ = ptr.Next;
+            left.Next = righ;
+            righ.Prev = left;
+        }
+        public bool is_empy() { if (Head == null) return true;return false; }
+        public void clear() {while (Head != null) { Pop_back(); } }
     }
 }
